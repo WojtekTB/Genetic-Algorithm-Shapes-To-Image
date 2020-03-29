@@ -5,8 +5,8 @@ class Element {
     this.imageHeight = height;
     if (data === undefined) {
       //if data not given, randomize data
-      let maxNumberOfShapes = 100;
-      let numberOfShapes = Math.floor(Math.random() * maxNumberOfShapes);
+      let maxNumberOfShapes = 80;
+      let numberOfShapes = Math.floor(Math.random() * maxNumberOfShapes) + 20;
       for (let i = 0; i < numberOfShapes; i++) {
         this.data.push(this.makeRandomShape());
       }
@@ -29,27 +29,12 @@ class Element {
     let maximumError = 255 * 3 * (this.imageWidth * this.imageHeight);
     let difference = 0;
 
-    /**
-     * this way of counting difference between pixels is not ideal because it assumes
-     * that it assumes that the image we compare to is to the right and is the same width and height.
-     * I might benefit from restructuring the system not around p5js but at this point I think this is the
-     * easiest and the most practical way
-     */
-    for (let y = 0; y < this.imageHeight; y++) {
-      for (let x = 0; x < this.imageWidth; x++) {
-        let pixelGuess = y * this.imageWidth * 2 * 4 + x * 4;
-        let pixelCheck =
-          y * this.imageWidth * 2 * 4 + x * 4 + this.imageWidth * 4;
-        for (let i = 0; i < 3; i++) {
-          difference += Math.abs(
-            pixels[pixelGuess + i] - pixels[pixelCheck + i]
-          );
-        }
-      }
+    for (let i = 0; i < imagePixels.length; i++) {
+      difference += Math.abs(imagePixels[i] - pixels[i]);
     }
 
-    let fitness = map(maximumError - difference, 0, maximumError, 0, 10); //normalize it between 0 and 1
-    this.fitness = Math.pow(fitness, 2); //I decided to square fitness because I want to emphesize the small imprevements
+    let fitness = 1 - difference / maximumError; //normalize it between 0 and 1
+    this.fitness = fitness; //I decided to square fitness because I want to emphesize the small imprevements
   }
 
   show() {
@@ -76,7 +61,7 @@ class Element {
       rotate(-shape.rotation * (3.14 / 180));
       translate(-shape.x, -shape.y);
     }
-    image(imageToGuess, this.imageWidth, 0, this.imageWidth, this.imageHeight);
+    // image(imageToGuess, this.imageWidth, 0, this.imageWidth, this.imageHeight);
     // image(imageToGuess, 0, 0, this.imageWidth, this.imageHeight);
   }
 
@@ -119,14 +104,14 @@ class Element {
      */
     let newShape = {
       shapeType: Math.floor(Math.random() * 3),
-      magnitude: Math.floor(Math.random() * 25) + 25,
+      magnitude: Math.floor(Math.random() * 30) + 1,
       x: Math.floor(Math.random() * this.imageWidth),
       y: Math.floor(Math.random() * this.imageHeight),
       rotation: Math.floor(Math.random() * 359),
       R: Math.floor(Math.random() * 255),
       G: Math.floor(Math.random() * 255),
       B: Math.floor(Math.random() * 255),
-      A: Math.floor(Math.random() * 155) + 100
+      A: Math.floor(Math.random() * 255)
     };
     return newShape;
   }
@@ -159,27 +144,7 @@ class Element {
   }
 
   mutate() {
-    let mutationId = Math.floor(Math.random() * this.data.length + 3);
-    if (mutationId >= this.data.length) {
-      this.data.push(this.makeRandomShape());
-      return;
-    }
-    let r = Math.floor(Math.random() * 6);
-
-    if (r < 1) {
-      this.data[mutationId].magnitude += map(Math.random(), 0, 1, -0.5, 0.5);
-    } else if (r < 2) {
-      this.data[mutationId].x += map(Math.random(), 0, 1, -1, 1);
-    } else if (r < 3) {
-      this.data[mutationId].y += map(Math.random(), 0, 1, -1, 1);
-    } else if (r < 4) {
-      this.data[mutationId].rotation += map(Math.random(), 0, 1, -1, 1);
-    } else if (r < 5) {
-      this.data[mutationId].R += map(Math.random(), 0, 1, -1, 1);
-      this.data[mutationId].G += map(Math.random(), 0, 1, -1, 1);
-      this.data[mutationId].B += map(Math.random(), 0, 1, -1, 1);
-    } else if (r < 6) {
-      this.data[mutationId].A += map(Math.random(), 0, 1, -1, 1);
-    }
+    let mutationId = Math.floor(Math.random() * this.data.length);
+    this.data[mutationId] = this.makeRandomShape();
   }
 }

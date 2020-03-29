@@ -13,6 +13,7 @@ class Population {
     this.averageFitnessHistory = [];
     this.bestFromEachGen = [];
     this.totalFitness = 0;
+    this.genNumber = 0;
   }
 
   makeNewGen() {
@@ -45,16 +46,16 @@ class Population {
       newPopulation.push(child);
     }
     this.population = newPopulation;
+    this.genNumber++;
   }
 
   getRandomParent() {
-    while (true) {
-      let possibleParent = this.population[
-        Math.floor(Math.random() * this.populationSize)
-      ];
-      let randNum = Math.random();
-      if (possibleParent.fitness / this.totalFitness < randNum) {
-        return possibleParent;
+    let Sum = 1;
+    let r = Math.random();
+    for (let i = 0; i < this.population.length; i++) {
+      Sum -= this.population[i].fitness / this.totalFitness;
+      if (r >= Sum) {
+        return this.population[i];
       }
     }
   }
