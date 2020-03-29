@@ -13,10 +13,29 @@ class Element {
     } else {
       this.data = data;
     }
+    this.imagePixels = [];
+    this.fitness = 0;
+    this.calculateFitness();
   }
 
   calculateFitness() {
     this.show();
+    //load pixels of canvas to pixels[] array
+    loadPixels();
+    this.updateElementPixels();
+    let maximumError = 255 * 3 * this.imageWidth * this.imageHeight;
+    let difference = 0;
+    //this way of counting difference between pixels is not ideal because it
+    //assumes that it assumes that the image we compare to is to the right and is the same width and height
+    for (let y = 0; y < this.imageHeight; y++) {
+      for (let x = 0; x < this.imageWidth * 4; x++) {
+        let pixelId = y * this.imageWidth * 2 * 4 + x;
+        let comparedPixelId = y * this.imageWidth * 2 * 4 + x + this.imageWidth;
+        difference += Math.abs(pixels[pixelId] - pixels[comparedPixelId]);
+      }
+    }
+    let fitness = maximumError - difference;
+    this.fitness = fitness;
   }
 
   show() {
@@ -42,8 +61,6 @@ class Element {
       rotate(-shape.rotation * (3.14 / 180));
       translate(-shape.x, -shape.y);
     }
-    loadPixels();
-    console.log(pixels);
   }
 
   drawShapeFromData(index) {
@@ -73,7 +90,7 @@ class Element {
   makeRandomShape() {
     /**
      * 3 types of different shapes 0: rectangle, 1: triangle, 2:circle
-     * Then magnitude of shape (how big it is) from 1 to 100(? max magnitude to be determined)
+     * Then magnitude of shape (how big it is) from 1 to 50(? max magnitude to be determined)
      * Then X, then Y of shape
      * then rotation of the shape
      * then R,G,B of the shape
@@ -82,7 +99,7 @@ class Element {
      */
     let newShape = {
       shapeType: Math.floor(Math.random() * 3),
-      magnitude: Math.floor(Math.random() * 100),
+      magnitude: Math.floor(Math.random() * 25) + 25,
       x: Math.floor(Math.random() * this.imageWidth),
       y: Math.floor(Math.random() * this.imageHeight),
       rotation: Math.floor(Math.random() * 359),
