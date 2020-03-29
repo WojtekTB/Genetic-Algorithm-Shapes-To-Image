@@ -18,27 +18,42 @@ class Element {
     this.calculateFitness();
   }
 
+  getFitness() {
+    return this.fitness;
+  }
+
   calculateFitness() {
     this.show();
     //load pixels of canvas to pixels[] array
     loadPixels();
-    this.updateElementPixels();
-    let maximumError = 255 * 3 * this.imageWidth * this.imageHeight;
+    let maximumError = 255 * 3 * (this.imageWidth * this.imageHeight);
     let difference = 0;
-    //this way of counting difference between pixels is not ideal because it
-    //assumes that it assumes that the image we compare to is to the right and is the same width and height
+
+    /**
+     * this way of counting difference between pixels is not ideal because it assumes
+     * that it assumes that the image we compare to is to the right and is the same width and height.
+     * I might benefit from restructuring the system not around p5js but at this point I think this is the
+     * easiest and the most practical way
+     */
     for (let y = 0; y < this.imageHeight; y++) {
-      for (let x = 0; x < this.imageWidth * 4; x++) {
-        let pixelId = y * this.imageWidth * 2 * 4 + x;
-        let comparedPixelId = y * this.imageWidth * 2 * 4 + x + this.imageWidth;
-        difference += Math.abs(pixels[pixelId] - pixels[comparedPixelId]);
+      for (let x = 0; x < this.imageWidth; x++) {
+        let pixelGuess = y * this.imageWidth * 2 * 4 + x * 4;
+        let pixelCheck =
+          y * this.imageWidth * 2 * 4 + x * 4 + this.imageWidth * 4;
+        for (let i = 0; i < 3; i++) {
+          difference += Math.abs(
+            pixels[pixelGuess + i] - pixels[pixelCheck + i]
+          );
+        }
       }
     }
-    let fitness = maximumError - difference;
-    this.fitness = fitness;
+
+    let fitness = map(maximumError - difference, 0, maximumError, 0, 10); //normalize it between 0 and 1
+    this.fitness = Math.pow(fitness, 2); //I decided to square fitness because I want to emphesize the small imprevements
   }
 
   show() {
+    background(0);
     noStroke();
     for (let shape of this.data) {
       fill(shape.R, shape.G, shape.B, shape.A);
@@ -61,30 +76,35 @@ class Element {
       rotate(-shape.rotation * (3.14 / 180));
       translate(-shape.x, -shape.y);
     }
+    image(imageToGuess, this.imageWidth, 0, this.imageWidth, this.imageHeight);
+    // image(imageToGuess, 0, 0, this.imageWidth, this.imageHeight);
   }
 
-  drawShapeFromData(index) {
-    let shape = this.data[index];
-    // fill(shape.R, shape.G, shape.B, shape.A);
-
+  outlineShapes() {
     noFill();
     stroke(255, 0, 0);
-    translate(shape.x, shape.y);
-    rotate(shape.rotation * (3.14 / 180)); //convert degrees to radiants
-    if (shape.shapeType == 0) {
-      rect(0, 0, shape.magnitude, shape.magnitude);
-    } else if (shape.shapeType == 1) {
-      triangle(
-        0,
-        0,
-        -shape.magnitude,
-        shape.magnitude,
-        shape.magnitude,
-        shape.magnitude
-      );
-    } else if (shape.shapeType == 2) {
-      circle(0, 0, shape.magnitude);
+    for (let shape of this.data) {
+      fill(shape.R, shape.G, shape.B, shape.A);
+      translate(shape.x, shape.y);
+      rotate(shape.rotation * (3.14 / 180)); //convert degrees to radiants
+      if (shape.shapeType == 0) {
+        rect(0, 0, shape.magnitude, shape.magnitude);
+      } else if (shape.shapeType == 1) {
+        triangle(
+          0,
+          0,
+          -shape.magnitude,
+          shape.magnitude,
+          shape.magnitude,
+          shape.magnitude
+        );
+      } else if (shape.shapeType == 2) {
+        circle(0, 0, shape.magnitude);
+      }
+      rotate(-shape.rotation * (3.14 / 180));
+      translate(-shape.x, -shape.y);
     }
+    image(imageToGuess, this.imageWidth, 0, this.imageWidth, this.imageHeight);
   }
 
   makeRandomShape() {
@@ -109,5 +129,57 @@ class Element {
       A: Math.floor(Math.random() * 155) + 100
     };
     return newShape;
+  }
+
+  cross(element) {
+    let r = Math.random();
+    let parentA;
+    let parentB;
+    if (r > 0.5) {
+      parentA = this;
+      parentB = element;
+    } else {
+      parentA = element;
+      parentB = this;
+    }
+    let smallerLength =
+      parentA.data.length < parentB.data.length
+        ? parentA.data.length
+        : parentB.data.length;
+    let childData = [];
+    for (let i = 0; i < smallerLength; i++) {
+      let r = Math.random();
+      if (r > 0.5) {
+        childData.push(parentA.data[i]);
+      } else {
+        childData.push(parentB.data[i]);
+      }
+    }
+    return new Element(this.imageWidth, this.imageHeight, childData);
+  }
+
+  mutate() {
+    let mutationId = Math.floor(Math.random() * this.data.length + 3);
+    if (mutationId >= this.data.length) {
+      this.data.push(this.makeRandomShape());
+      return;
+    }
+    let r = Math.floor(Math.random() * 6);
+
+    if (r < 1) {
+      this.data[mutationId].magnitude += map(Math.random(), 0, 1, -0.5, 0.5);
+    } else if (r < 2) {
+      this.data[mutationId].x += map(Math.random(), 0, 1, -1, 1);
+    } else if (r < 3) {
+      this.data[mutationId].y += map(Math.random(), 0, 1, -1, 1);
+    } else if (r < 4) {
+      this.data[mutationId].rotation += map(Math.random(), 0, 1, -1, 1);
+    } else if (r < 5) {
+      this.data[mutationId].R += map(Math.random(), 0, 1, -1, 1);
+      this.data[mutationId].G += map(Math.random(), 0, 1, -1, 1);
+      this.data[mutationId].B += map(Math.random(), 0, 1, -1, 1);
+    } else if (r < 6) {
+      this.data[mutationId].A += map(Math.random(), 0, 1, -1, 1);
+    }
   }
 }

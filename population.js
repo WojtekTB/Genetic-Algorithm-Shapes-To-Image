@@ -1,96 +1,61 @@
 class Population {
-  constructor(
-    populationSize,
-    populationMaxDataLength,
-    charSet,
-    mutationRate,
-    fitnessFunction
-  ) {
+  constructor(populationSize, mutationRate, width, height) {
     this.population = [];
-    this.matingPool = [];
+    this.width = width;
+    this.height = height;
     for (let i = 0; i < populationSize; i++) {
       //createa bunch of random elements in population
-      this.population.push(
-        new Element(fitnessFunction, charSet, populationMaxDataLength)
-      );
+      this.population.push(new Element(this.width, this.height));
     }
     this.populationSize = populationSize;
     this.mutationRate = mutationRate;
     //history of previous generations
-    this.history = [];
-    this.fitnessHistory = [];
-    this.bestElementId = 0;
-  }
-
-  makeMatingPool() {
-    //add more copies of some element depending on its fitness
-    this.matingPool = [];
-    for (let element of this.population) {
-      if (Math.floor(Math.random() * 100) < this.mutationRate * 100) {
-        element.mutate();
-      }
-      //   console.log(element);
-      for (let i = 0; i < element.getFitness(); i++) {
-        this.matingPool.push(element);
-      }
-    }
+    this.averageFitnessHistory = [];
+    this.bestFromEachGen = [];
+    this.totalFitness = 0;
   }
 
   makeNewGen() {
-    this.logGen();
-    let highestFitness = 0;
+    //save the best in generation element and log the average fitness
+    let bestInGen;
+    let bestFitness = 0;
+    let totalFitness = 0;
+    for (let i = 0; i < this.populationSize; i++) {
+      if (this.population[i].fitness > bestFitness) {
+        bestFitness = this.population[i].fitness;
+        bestInGen = this.population[i];
+      }
+      totalFitness += this.population[i].fitness;
+    }
+    let averageFitness = totalFitness / this.populationSize;
+    this.totalFitness = totalFitness;
+    this.averageFitnessHistory.push(averageFitness);
+    this.bestFromEachGen.push(bestInGen);
     let newPopulation = [];
     for (let i = 0; i < this.populationSize; i++) {
-      //get 2 random parents from mating pool
-      let parentA = this.matingPool[
-        Math.floor(Math.random() * (this.matingPool.length - 1))
-      ];
-      let parentB = this.matingPool[
-        Math.floor(Math.random() * (this.matingPool.length - 1))
-      ];
-      //make a new eleemnt out of the two semi random parents
-      let newElement = parentA.crossWith(parentB);
-      newPopulation.push(newElement);
-      if (newElement.getFitness() > highestFitness) {
-        highestFitness = newElement.getFitness();
-        this.bestElementId = i;
+      //pick parent A
+      let parentA = this.getRandomParent();
+      let parentB = this.getRandomParent();
+      let child = parentA.cross(parentB);
+      //check if you want to mutate child
+      if (Math.random() > this.mutationRate) {
+        //this doesn't sound good lol
+        child.mutate();
       }
-      //   console.log(newElement, parentA, parentB);
+      newPopulation.push(child);
     }
     this.population = newPopulation;
   }
 
-  logGen() {
-    let generationLog = this.makeGenObject();
-    this.fitnessHistory.push(generationLog.averageFitness);
-    this.history.push(generationLog);
-  }
-
-  makeGenObject() {
-    //save current generation and record its average fitness
-    let averageFitness = 0;
-    let listOfAllElements = "Generation " + (this.history.length + 1) + ": \n";
-    for (let i = 0; i < this.population.length; i++) {
-      if (i === this.bestElementId) {
-        listOfAllElements +=
-          `<mark>${i + 1}) ` + this.population[i].toString() + "</mark>\n";
-      } else {
-        listOfAllElements +=
-          `${i + 1}) ` + this.population[i].toString() + "\n";
+  getRandomParent() {
+    while (true) {
+      let possibleParent = this.population[
+        Math.floor(Math.random() * this.populationSize)
+      ];
+      let randNum = Math.random();
+      if (possibleParent.fitness / this.totalFitness < randNum) {
+        return possibleParent;
       }
-      averageFitness += this.population[i].getFitness();
     }
-    averageFitness /= this.populationSize;
-    //removing the last coma
-    listOfAllElements = listOfAllElements.substring(
-      0,
-      listOfAllElements.length - 1
-    );
-
-    let generationLog = {
-      datas: listOfAllElements,
-      averageFitness: averageFitness
-    };
-    return generationLog;
   }
 }

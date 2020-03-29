@@ -4,6 +4,14 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Genetic algorith - Image to Picture</title>
+    <style>
+      .col {
+        width: 45vw;
+        font-size: 0.8vw;
+        padding: 1vw;
+        /* border-style: groove; */
+      }
+    </style>
   </head>
 
   <script src="https://cdn.jsdelivr.net/npm/p5@1.0.0/lib/p5.js"></script>
@@ -13,6 +21,17 @@
   />
   <script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
   <script src="./sketch.js"></script>
+  <script src="./population.js"></script>
   <script src="./element.js"></script>
-  <body></body>
+  <script src="./graph.js"></script>
+  <body>
+    <div id="col" style="float: left;">
+      <div id="myCanvas"></div>
+      <div class="ct-chart ct-perfect-fourth" style="width: 45vw;"></div>
+    </div>
+    <div id="col" style="float: left;">
+      <h2 style="float: left; padding: 5px;">Generation:</h2>
+      <h2 style="float: left; padding: 5px;" id="generationNum">#</h2>
+    </div>
+  </body>
 </html>
