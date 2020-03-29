@@ -5,7 +5,9 @@ class Population {
     this.height = height;
     for (let i = 0; i < populationSize; i++) {
       //createa bunch of random elements in population
-      this.population.push(new Element(this.width, this.height));
+      let newElem = new Element(this.width, this.height);
+      newElem.calculateFitness();
+      this.population.push(newElem);
     }
     this.populationSize = populationSize;
     this.mutationRate = mutationRate;
@@ -14,6 +16,27 @@ class Population {
     this.bestFromEachGen = [];
     this.totalFitness = 0;
     this.genNumber = 0;
+    this.ranks = [];
+    // this.makeRanks();
+  }
+
+  makeRanks() {
+    let numInRanks = Math.floor(this.populationSize * 0.1);
+    this.ranks = [];
+    let highest = [];
+    while (this.ranks.length < numInRanks) {
+      let fitnessOfHigherst = -1;
+      for (let i = 0; i < this.population.length; i++) {
+        if (this.population[i].fitness > fitnessOfHigherst) {
+          fitnessOfHigherst = this.population[i].fitness;
+          highest.push(this.population[i]);
+          if (highest < numInRanks) {
+            highest.splice(0, 1);
+          }
+        }
+      }
+      this.ranks = highest;
+    }
   }
 
   makeNewGen() {
@@ -21,7 +44,7 @@ class Population {
     let bestInGen;
     let bestFitness = 0;
     let totalFitness = 0;
-    for (let i = 0; i < this.populationSize; i++) {
+    for (let i = 0; i < this.populationSize - 1; i++) {
       if (this.population[i].fitness > bestFitness) {
         bestFitness = this.population[i].fitness;
         bestInGen = this.population[i];
@@ -37,6 +60,9 @@ class Population {
       //pick parent A
       let parentA = this.getRandomParent();
       let parentB = this.getRandomParent();
+      // this.makeRanks();
+      // let parentA = this.getParentFromRanks();
+      // let parentB = this.getParentFromRanks();
       let child = parentA.cross(parentB);
       //check if you want to mutate child
       if (Math.random() > this.mutationRate) {
@@ -47,6 +73,11 @@ class Population {
     }
     this.population = newPopulation;
     this.genNumber++;
+  }
+
+  getParentFromRanks() {
+    let id = Math.floor(Math.random() * this.ranks.length);
+    return this.ranks[id];
   }
 
   getRandomParent() {

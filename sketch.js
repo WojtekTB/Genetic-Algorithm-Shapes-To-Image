@@ -16,13 +16,16 @@ function setup() {
   canvas.parent("myCanvas");
   pixelDensity(1); //as it turns out you need this for some displays such as mac book pro for pixels array to work properly
   background(0);
-  population = new Population(500, 0.01, 100, 100);
+  population = new Population(100, 0.01, 100, 100);
   // frameRate(1);
   drawChart(population.averageFitnessHistory);
 }
 
 function draw() {
   population.makeNewGen();
+  for (let i = 0; i < population.population.length; i++) {
+    population.population[i].calculateFitness();
+  }
   // console.log("new gen");
   myChart.update();
   let genNumLabel = document.getElementById("generationNum");
@@ -33,7 +36,7 @@ function draw() {
     population.averageFitnessHistory[
       population.averageFitnessHistory.length - 1
     ];
-  if (population.averageFitnessHistory.length % 1000 == 1) {
-    saveCanvas("Generation_" + population.averageFitnessHistory.length);
+  if (population.averageFitnessHistory.length % 1000 == 0) {
+    // saveCanvas("Generation_" + population.averageFitnessHistory.length);
   }
 }

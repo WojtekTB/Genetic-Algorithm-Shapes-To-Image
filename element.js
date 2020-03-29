@@ -15,7 +15,6 @@ class Element {
     }
     this.imagePixels = [];
     this.fitness = 0;
-    this.calculateFitness();
   }
 
   getFitness() {
@@ -29,8 +28,15 @@ class Element {
     let maximumError = 255 * 3 * (this.imageWidth * this.imageHeight);
     let difference = 0;
 
-    for (let i = 0; i < imagePixels.length; i++) {
-      difference += Math.abs(imagePixels[i] - pixels[i]);
+    for (let i = 0; i < imagePixels.length; i += 4) {
+      let r = i;
+      let g = i + 1;
+      let b = 1 + 2;
+
+      let deltaR = Math.abs(pixels[r] - imagePixels[r]);
+      let deltaG = Math.abs(pixels[g] - imagePixels[g]);
+      let deltaB = Math.abs(pixels[b] - imagePixels[b]);
+      difference += deltaR + deltaG + deltaB;
     }
 
     let fitness = 1 - difference / maximumError; //normalize it between 0 and 1
@@ -104,7 +110,7 @@ class Element {
      */
     let newShape = {
       shapeType: Math.floor(Math.random() * 3),
-      magnitude: Math.floor(Math.random() * 30) + 1,
+      magnitude: Math.floor(Math.random() * 50) + 1,
       x: Math.floor(Math.random() * this.imageWidth),
       y: Math.floor(Math.random() * this.imageHeight),
       rotation: Math.floor(Math.random() * 359),
@@ -117,34 +123,49 @@ class Element {
   }
 
   cross(element) {
-    let r = Math.random();
-    let parentA;
-    let parentB;
-    if (r > 0.5) {
-      parentA = this;
-      parentB = element;
-    } else {
-      parentA = element;
-      parentB = this;
-    }
-    let smallerLength =
-      parentA.data.length < parentB.data.length
-        ? parentA.data.length
-        : parentB.data.length;
-    let childData = [];
-    for (let i = 0; i < smallerLength; i++) {
-      let r = Math.random();
-      if (r > 0.5) {
-        childData.push(parentA.data[i]);
-      } else {
-        childData.push(parentB.data[i]);
-      }
-    }
+    // let r = Math.random();
+    // let parentA;
+    // let parentB;
+    // if (r > 0.5) {
+    //   parentA = this;
+    //   parentB = element;
+    // } else {
+    //   parentA = element;
+    //   parentB = this;
+    // }
+    // let smallerLength =
+    //   parentA.data.length < parentB.data.length
+    //     ? parentA.data.length
+    //     : parentB.data.length;
+    // let childData = [];
+    // for (let i = 0; i < smallerLength; i++) {
+    //   let r = Math.random();
+    //   if (r > 0.5) {
+    //     childData.push(parentA.data[i]);
+    //   } else {
+    //     childData.push(parentB.data[i]);
+    //   }
+    // }
+    // return new Element(this.imageWidth, this.imageHeight, childData);
+
+    let r1 = Math.random();
+    let r2 = Math.random();
+
+    let parentASnip = this.data.slice(0, Math.floor(r1 * this.data.length));
+    let parentBSnip = element.data.slice(
+      Math.floor(r2 * element.data.length - 1),
+      element.data.length
+    );
+    let childData = parentASnip.concat(parentBSnip);
     return new Element(this.imageWidth, this.imageHeight, childData);
   }
 
   mutate() {
     let mutationId = Math.floor(Math.random() * this.data.length);
-    this.data[mutationId] = this.makeRandomShape();
+    if (mutationId > this.data.length) {
+      this.data.push(this.makeRandomShape());
+    } else {
+      this.data[mutationId] = this.makeRandomShape();
+    }
   }
 }
