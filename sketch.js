@@ -4,39 +4,45 @@ var imageToGuess;
 var imagePixels;
 var population;
 
+var imageWidth, imageHeight;
 var myChart;
 function preload() {
   imageToGuess = loadImage("./mona-lisa-resized.jpg");
-  imageToGuess.loadPixels();
-  imagePixels = imageToGuess.pixels;
 }
 
 function setup() {
+  imageWidth = imageToGuess.width;
+  imageHeight = imageToGuess.height;
+  imageToGuess.loadPixels();
+  imagePixels = imageToGuess.pixels;
   canvas = createCanvas(100, 100);
+  console.log(imageWidth, imageHeight);
   canvas.parent("myCanvas");
   pixelDensity(1); //as it turns out you need this for some displays such as mac book pro for pixels array to work properly
   background(0);
-  population = new Population(100, 0.01, 100, 100);
+  population = new Population(imageWidth, imageHeight);
   // frameRate(1);
-  drawChart(population.averageFitnessHistory);
+  drawChart(population.fitnessHistory);
+  // noLoop();
 }
 
 function draw() {
-  population.makeNewGen();
-  for (let i = 0; i < population.population.length; i++) {
-    population.population[i].calculateFitness();
-  }
-  // console.log("new gen");
+  takeStep();
+}
+
+function takeStep() {
+  population.nextGen();
+  // console.log(population.mutated.fitness - population.best.fitness);
+  // console.log(population.mutated.data.length, population.best.data.length);
   myChart.update();
+  // console.log(population.best.data);
   let genNumLabel = document.getElementById("generationNum");
   genNumLabel.innerHTML = population.genNumber;
-  let genFitLabel = document.getElementById("generationFitness");
-
-  genFitLabel.innerHTML =
-    population.averageFitnessHistory[
-      population.averageFitnessHistory.length - 1
-    ];
-  if (population.averageFitnessHistory.length % 1000 == 0) {
-    // saveCanvas("Generation_" + population.averageFitnessHistory.length);
-  }
+  let bestFitLabel = document.getElementById("bestFit");
+  bestFitLabel.innerHTML = population.best.fitness;
+  let mutFitLabel = document.getElementById("mutationFit");
+  mutFitLabel.innerHTML = population.mutated.fitness;
+  // if (population.averageFitnessHistory.length % 1000 == 0) {
+  //   // saveCanvas("Generation_" + population.averageFitnessHistory.length);
+  // }
 }

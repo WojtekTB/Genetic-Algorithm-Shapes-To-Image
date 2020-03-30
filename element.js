@@ -5,10 +5,11 @@ class Element {
     this.imageHeight = height;
     if (data === undefined) {
       //if data not given, randomize data
-      let maxNumberOfShapes = 80;
-      let numberOfShapes = Math.floor(Math.random() * maxNumberOfShapes) + 20;
+      let maxNumberOfShapes = 10;
+      let numberOfShapes = Math.floor(Math.random() * maxNumberOfShapes) + 3;
+      console.log("data not given");
       for (let i = 0; i < numberOfShapes; i++) {
-        this.data.push(this.makeRandomShape());
+        this.data = this.data.concat(this.makeRandomShape());
       }
     } else {
       this.data = data;
@@ -46,7 +47,20 @@ class Element {
   show() {
     background(0);
     noStroke();
-    for (let shape of this.data) {
+    for (let i = 0; i < this.data.length; i += 9) {
+      let shape = {
+        shapeType: this.data[i],
+        magnitude: this.data[i + 1],
+        x: this.data[i + 2],
+        y: this.data[i + 3],
+        rotation: this.data[i + 4],
+        R: this.data[i + 5],
+        G: this.data[i + 6],
+        B: this.data[i + 7],
+        A: this.data[i + 8]
+      };
+      // console.log(shape);
+
       fill(shape.R, shape.G, shape.B, shape.A);
       translate(shape.x, shape.y);
       rotate(shape.rotation * (3.14 / 180)); //convert degrees to radiants
@@ -74,7 +88,18 @@ class Element {
   outlineShapes() {
     noFill();
     stroke(255, 0, 0);
-    for (let shape of this.data) {
+    for (let i = 0; i < this.data.length; i += 9) {
+      let shape = {
+        shapeType: this.data[i],
+        magnitude: this.data[i + 1],
+        x: this.data[i + 2],
+        y: this.data[i + 3],
+        rotation: this.data[i + 4],
+        R: this.data[i + 5],
+        G: this.data[i + 6],
+        B: this.data[i + 7],
+        A: this.data[i + 8]
+      };
       fill(shape.R, shape.G, shape.B, shape.A);
       translate(shape.x, shape.y);
       rotate(shape.rotation * (3.14 / 180)); //convert degrees to radiants
@@ -108,64 +133,63 @@ class Element {
      *
      * thus DNA will come in a set of 8 numbers
      */
-    let newShape = {
-      shapeType: Math.floor(Math.random() * 3),
-      magnitude: Math.floor(Math.random() * 50) + 1,
-      x: Math.floor(Math.random() * this.imageWidth),
-      y: Math.floor(Math.random() * this.imageHeight),
-      rotation: Math.floor(Math.random() * 359),
-      R: Math.floor(Math.random() * 255),
-      G: Math.floor(Math.random() * 255),
-      B: Math.floor(Math.random() * 255),
-      A: Math.floor(Math.random() * 255)
-    };
-    return newShape;
-  }
-
-  cross(element) {
-    // let r = Math.random();
-    // let parentA;
-    // let parentB;
-    // if (r > 0.5) {
-    //   parentA = this;
-    //   parentB = element;
-    // } else {
-    //   parentA = element;
-    //   parentB = this;
-    // }
-    // let smallerLength =
-    //   parentA.data.length < parentB.data.length
-    //     ? parentA.data.length
-    //     : parentB.data.length;
-    // let childData = [];
-    // for (let i = 0; i < smallerLength; i++) {
-    //   let r = Math.random();
-    //   if (r > 0.5) {
-    //     childData.push(parentA.data[i]);
-    //   } else {
-    //     childData.push(parentB.data[i]);
-    //   }
-    // }
-    // return new Element(this.imageWidth, this.imageHeight, childData);
-
-    let r1 = Math.random();
-    let r2 = Math.random();
-
-    let parentASnip = this.data.slice(0, Math.floor(r1 * this.data.length));
-    let parentBSnip = element.data.slice(
-      Math.floor(r2 * element.data.length - 1),
-      element.data.length
-    );
-    let childData = parentASnip.concat(parentBSnip);
-    return new Element(this.imageWidth, this.imageHeight, childData);
+    // let newShape = {
+    //   shapeType: Math.floor(Math.random() * 3),
+    //   magnitude: Math.floor(Math.random() * 50) + 1,
+    //   x: Math.floor(Math.random() * this.imageWidth),
+    //   y: Math.floor(Math.random() * this.imageHeight),
+    //   rotation: Math.floor(Math.random() * 359),
+    //   R: Math.floor(Math.random() * 255),
+    //   G: Math.floor(Math.random() * 255),
+    //   B: Math.floor(Math.random() * 255),
+    //   A: Math.floor(Math.random() * 255)
+    // };
+    return [
+      Math.floor(Math.random() * 3),
+      Math.floor(Math.random() * this.imageWidth) + 1,
+      Math.floor(Math.random() * this.imageWidth),
+      Math.floor(Math.random() * this.imageHeight),
+      Math.floor(Math.random() * 359),
+      Math.floor(Math.random() * 255),
+      Math.floor(Math.random() * 255),
+      Math.floor(Math.random() * 255),
+      Math.floor(Math.random() * 255)
+    ];
   }
 
   mutate() {
-    let mutationId = Math.floor(Math.random() * this.data.length);
-    if (mutationId > this.data.length) {
-      this.data.push(this.makeRandomShape());
+    let r = Math.random();
+
+    if (r < 0.33 && this.data.length > 2 * 9) {
+      let mutationId = Math.floor(Math.random() * (this.data.length / 9));
+      this.data.splice(mutationId * 9, 9);
+      // console.log("1");
+      // console.log("took a shape");
+      // console.log(this.data);
+      // console.log("!");
+    } else if (r < 0.66) {
+      // console.log("2");
+      // let mutationId = Math.floor(Math.random() * this.data.length + 1);
+      // // console.log(mutationId);
+      // if (mutationId > this.data.length) {
+      this.data = this.data.concat(this.makeRandomShape());
+      // console.log("added a shape");
+      // } else {
+      //   this.data[mutationId] = this.makeRandomShape();
+      // }
     } else {
-      this.data[mutationId] = this.makeRandomShape();
+      // console.log("3");
+      let mutationId = Math.floor(Math.random() * (this.data.length / 9));
+      let newshape = this.makeRandomShape();
+      this.data[mutationId] = newshape[0];
+      this.data[mutationId + 1] = newshape[1];
+      this.data[mutationId + 2] = newshape[2];
+      this.data[mutationId + 3] = newshape[3];
+      this.data[mutationId + 4] = newshape[4];
+      this.data[mutationId + 5] = newshape[5];
+      this.data[mutationId + 6] = newshape[6];
+      this.data[mutationId + 7] = newshape[7];
+      this.data[mutationId + 8] = newshape[8];
     }
   }
 }

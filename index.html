@@ -8,7 +8,7 @@
       .col {
         width: 45vw;
         font-size: 0.8vw;
-        padding: 1vw;
+        padding: 50px;
         /* border-style: groove; */
       }
     </style>
@@ -25,23 +25,25 @@
   <script src="./element.js"></script>
   <script src="./graph.js"></script>
   <body>
-    <div id="col" style="float: left;">
-      <div id="myCanvas"></div>
-      <img src="./mona-lisa-resized.jpg" />
-      <div class="ct-chart ct-perfect-fourth" style="width: 45vw;"></div>
-    </div>
-    <div id="col" style="float: left;">
+    <div id="col">
       <h2>Generation:</h2>
       <h2 style="font-weight: 10; white-space: pre-line;" id="generationNum">
         #
       </h2>
-      <h2>Current generation average fitness:</h2>
-      <h2
-        style="font-weight: 10; white-space: pre-line;"
-        id="generationFitness"
-      >
+      <h2>Best fitness so far:</h2>
+      <h2 style="font-weight: 10; white-space: pre-line;" id="bestFit">
         #
       </h2>
+      <h2>Current generation mutation fitness:</h2>
+      <h2 style="font-weight: 10; white-space: pre-line;" id="mutationFit">
+        #
+      </h2>
+      <div class="ct-chart ct-perfect-fourth" style="width: 45vw;"></div>
+    </div>
+
+    <div id="col">
+      <div style="max-width: 45vw;" id="myCanvas"></div>
+      <img src="./mona-lisa-resized.jpg" />
     </div>
   </body>
 </html>
