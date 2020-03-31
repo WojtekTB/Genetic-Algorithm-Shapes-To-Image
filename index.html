@@ -6,7 +6,7 @@
     <title>Genetic algorith - Image to Picture</title>
     <style>
       .col {
-        width: 45vw;
+        width: 25vw;
         font-size: 0.8vw;
         padding: 50px;
         /* border-style: groove; */
@@ -38,12 +38,16 @@
       <h2 style="font-weight: 10; white-space: pre-line;" id="mutationFit">
         #
       </h2>
-      <div class="ct-chart ct-perfect-fourth" style="width: 45vw;"></div>
+      <div class="ct-chart ct-perfect-fourth" style="width: 25vw;"></div>
     </div>
 
-    <div id="col">
+    <div id="col" style="float: left;">
       <div style="max-width: 45vw;" id="myCanvas"></div>
-      <img src="./mona-lisa-resized.jpg" />
+      <img
+        src="./mona-lisa-resized.jpg"
+        id="actualImage"
+        style="width: 200px"
+      />
     </div>
   </body>
 </html>

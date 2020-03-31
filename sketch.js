@@ -1,5 +1,7 @@
 var canvas;
 
+var imagePath = "./mona-lisa-original.jpg";
+
 var imageToGuess;
 var imagePixels;
 var population;
@@ -7,15 +9,19 @@ var population;
 var imageWidth, imageHeight;
 var myChart;
 function preload() {
-  imageToGuess = loadImage("./mona-lisa-resized.jpg");
+  // imageToGuess = loadImage("./mona-lisa-resized.jpg");
+  imageToGuess = loadImage(imagePath);
 }
 
 function setup() {
+  //100 = w * x
+  let factor = 200 / imageToGuess.width;
+  imageToGuess.resize(200, imageToGuess.height * factor);
   imageWidth = imageToGuess.width;
   imageHeight = imageToGuess.height;
   imageToGuess.loadPixels();
   imagePixels = imageToGuess.pixels;
-  canvas = createCanvas(100, 100);
+  canvas = createCanvas(imageWidth, imageHeight);
   console.log(imageWidth, imageHeight);
   canvas.parent("myCanvas");
   pixelDensity(1); //as it turns out you need this for some displays such as mac book pro for pixels array to work properly
@@ -23,11 +29,18 @@ function setup() {
   population = new Population(imageWidth, imageHeight);
   // frameRate(1);
   drawChart(population.fitnessHistory);
-  // noLoop();
+  noLoop();
+
+  let imageElement = document.getElementById("actualImage");
+  imageElement.src = imagePath;
 }
 
 function draw() {
-  takeStep();
+  // takeStep();
+  // if (frameCount % 10000 === 1) {
+  //   population.best.show();
+  //   saveCanvas(imagePath + "_Generation_" + population.genNumber, "png");
+  // }
 }
 
 function takeStep() {

@@ -41,6 +41,10 @@ class Element {
     }
 
     let fitness = 1 - difference / maximumError; //normalize it between 0 and 1
+    let polyNum = 40;
+    // if (this.data.length / 8 > polyNum) {
+    //   fitness -= 0.0001 * (this.data.length / 8 - polyNum);
+    // }
     this.fitness = fitness; //I decided to square fitness because I want to emphesize the small imprevements
   }
 
@@ -163,22 +167,9 @@ class Element {
     if (r < 0.33 && this.data.length > 2 * 9) {
       let mutationId = Math.floor(Math.random() * (this.data.length / 9));
       this.data.splice(mutationId * 9, 9);
-      // console.log("1");
-      // console.log("took a shape");
-      // console.log(this.data);
-      // console.log("!");
     } else if (r < 0.66) {
-      // console.log("2");
-      // let mutationId = Math.floor(Math.random() * this.data.length + 1);
-      // // console.log(mutationId);
-      // if (mutationId > this.data.length) {
       this.data = this.data.concat(this.makeRandomShape());
-      // console.log("added a shape");
-      // } else {
-      //   this.data[mutationId] = this.makeRandomShape();
-      // }
     } else {
-      // console.log("3");
       let mutationId = Math.floor(Math.random() * (this.data.length / 9));
       let newshape = this.makeRandomShape();
       this.data[mutationId] = newshape[0];

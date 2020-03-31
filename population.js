@@ -17,8 +17,8 @@ class Population {
     if (this.mutated.fitness > this.best.fitness) {
       this.best = this.mutated;
       console.log("improved");
-      this.fitnessHistory.push(this.best.fitness);
     }
+    this.fitnessHistory.push(this.best.fitness);
     this.mutated = new Element(this.width, this.height, this.best.data.slice());
     this.mutated.mutate();
     this.mutated.calculateFitness();
