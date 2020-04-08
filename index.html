@@ -25,9 +25,13 @@
   <script src="./element.js"></script>
   <script src="./graph.js"></script>
   <body>
-    <div id="col">
+    <div id="col" style="float: left; padding: 5vw;">
       <h2>Generation:</h2>
       <h2 style="font-weight: 10; white-space: pre-line;" id="generationNum">
+        #
+      </h2>
+      <h2>Number of improvements:</h2>
+      <h2 style="font-weight: 10; white-space: pre-line;" id="improvNum">
         #
       </h2>
       <h2>Best fitness so far:</h2>
@@ -38,16 +42,18 @@
       <h2 style="font-weight: 10; white-space: pre-line;" id="mutationFit">
         #
       </h2>
-      <div class="ct-chart ct-perfect-fourth" style="width: 25vw;"></div>
+      <h2>Fitness chart:</h2>
+      <div class="ct-chart ct-perfect-fourth" style="width: 45vw;"></div>
     </div>
 
-    <div id="col" style="float: left;">
+    <div id="col" style="float: left; padding-top: 5vh;">
       <div style="max-width: 45vw;" id="myCanvas"></div>
       <img
         src="./mona-lisa-resized.jpg"
         id="actualImage"
         style="width: 200px"
       />
+      <button onclick="begin();">begin</button>
     </div>
   </body>
 </html>

@@ -6,11 +6,11 @@ class Element {
     if (data === undefined) {
       //if data not given, randomize data
       let maxNumberOfShapes = 10;
-      let numberOfShapes = Math.floor(Math.random() * maxNumberOfShapes) + 3;
+      // let numberOfShapes = Math.floor(Math.random() * maxNumberOfShapes) + 3;
       console.log("data not given");
-      for (let i = 0; i < numberOfShapes; i++) {
-        this.data = this.data.concat(this.makeRandomShape());
-      }
+      // for (let i = 0; i < numberOfShapes; i++) {
+      this.data = this.data.concat(this.makeRandomShape());
+      // }
     } else {
       this.data = data;
     }
@@ -41,7 +41,7 @@ class Element {
     }
 
     let fitness = 1 - difference / maximumError; //normalize it between 0 and 1
-    let polyNum = 40;
+    // let polyNum = 40;
     // if (this.data.length / 8 > polyNum) {
     //   fitness -= 0.0001 * (this.data.length / 8 - polyNum);
     // }

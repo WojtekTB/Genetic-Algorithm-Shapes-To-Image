@@ -1,6 +1,7 @@
 var canvas;
 
-var imagePath = "./mona-lisa-original.jpg";
+// var imagePath = "./mona-lisa-original.jpg";
+var imagePath = "./girl-with-a-pearl-earing.jpg";
 
 var imageToGuess;
 var imagePixels;
@@ -9,7 +10,6 @@ var population;
 var imageWidth, imageHeight;
 var myChart;
 function preload() {
-  // imageToGuess = loadImage("./mona-lisa-resized.jpg");
   imageToGuess = loadImage(imagePath);
 }
 
@@ -29,18 +29,22 @@ function setup() {
   population = new Population(imageWidth, imageHeight);
   // frameRate(1);
   drawChart(population.fitnessHistory);
-  noLoop();
 
   let imageElement = document.getElementById("actualImage");
   imageElement.src = imagePath;
+  noLoop();
+}
+
+function begin() {
+  loop();
 }
 
 function draw() {
-  // takeStep();
-  // if (frameCount % 10000 === 1) {
-  //   population.best.show();
-  //   saveCanvas(imagePath + "_Generation_" + population.genNumber, "png");
-  // }
+  takeStep();
+  if (frameCount % 5000 === 0) {
+    population.best.show();
+    saveCanvas(imagePath + "_Generation_" + population.genNumber, "png");
+  }
 }
 
 function takeStep() {
@@ -51,6 +55,8 @@ function takeStep() {
   // console.log(population.best.data);
   let genNumLabel = document.getElementById("generationNum");
   genNumLabel.innerHTML = population.genNumber;
+  let improvNumLabel = document.getElementById("improvNum");
+  improvNumLabel.innerHTML = population.numberOfImprovements;
   let bestFitLabel = document.getElementById("bestFit");
   bestFitLabel.innerHTML = population.best.fitness;
   let mutFitLabel = document.getElementById("mutationFit");
