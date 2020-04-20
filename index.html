@@ -58,7 +58,24 @@
       <button onclick="begin();">begin</button>
       <button onclick="draw();">next</button>
     </div>
+    <div>
+      <input type="checkbox" id="saveCheckBox" onclick="toggleSaveItter(this);">
+      <label for="saveCheckBox">Save every 5000th iteration</label>
+    </div>
+    <div>
+      <button onclick="saveManual();">Download current iteration</button>
+    </div>
   </div>
 </body>
+
+<script>
+  var saveCanvasIteration = false;
+  function toggleSaveItter(e) {
+    saveCanvasIteration = e.checked;
+  }
+  function saveManual() {
+    saveCanvas("Generation_" + population.genNumber, "png");
+  }
+</script>
 
 </html>

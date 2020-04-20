@@ -7,6 +7,7 @@ var imageToGuess;
 var imagePixels;
 var population;
 
+
 var imageWidth, imageHeight;
 var myChart;
 function preload() {
@@ -46,10 +47,10 @@ function stop() {
 
 function draw() {
   takeStep();
-  // if (frameCount % 5000 === 0) {
-  //   population.best.show();
-  //   saveCanvas(imagePath + "_Generation_" + population.genNumber, "png");
-  // }
+  if (frameCount % 5000 === 0 && saveCanvasIteration) {
+    population.best.show();
+    saveCanvas("Generation_" + population.genNumber, "png");
+  }
 }
 
 function takeStep() {

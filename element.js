@@ -5,9 +5,9 @@ class Element {
     this.imageHeight = height;
     if (data === undefined) {
       //if data not given, randomize data
-      let maxNumberOfShapes = 10;
+      // let maxNumberOfShapes = 10;
       // let numberOfShapes = Math.floor(Math.random() * maxNumberOfShapes) + 3;
-      console.log("data not given");
+      // console.log("data not given");
       // for (let i = 0; i < numberOfShapes; i++) {
       this.data = this.data.concat(this.makeRandomShape());
       // }
@@ -39,7 +39,7 @@ class Element {
       difference += deltaR + deltaG + deltaB;
     }
 
-    let fitness = 1 - difference / maximumError; //normalize it between 0 and 1
+    let fitness = 1 - (difference / maximumError); //normalize it between 0 and 1
     // let polyNum = 40;
     // if (this.data.length / 8 > polyNum) {
     //   fitness -= 0.0001 * (this.data.length / 8 - polyNum);
@@ -166,6 +166,7 @@ class Element {
     if (r < 0.33 && this.data.length > 2 * 9) {
       let mutationId = Math.floor(Math.random() * (this.data.length / 9));
       this.data.splice(mutationId * 9, 9);
+      // console.log("tried removing");
     } else if (r < 0.66) {
       this.data = this.data.concat(this.makeRandomShape());
     } else {
