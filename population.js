@@ -16,7 +16,7 @@ class Population {
     this.numberOfImprovements = 0;
   }
   nextGen() {
-    if (this.mutated.fitness > this.best.fitness) {
+    if (this.mutated.fitness >= this.best.fitness) {
       this.best = this.mutated;
       this.numberOfImprovements++;
       // console.log("improved");
