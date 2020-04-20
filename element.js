@@ -14,7 +14,6 @@ class Element {
     } else {
       this.data = data;
     }
-    this.imagePixels = [];
     this.fitness = 0;
   }
 
@@ -32,7 +31,7 @@ class Element {
     for (let i = 0; i < imagePixels.length; i += 4) {
       let r = i;
       let g = i + 1;
-      let b = 1 + 2;
+      let b = i + 2;
 
       let deltaR = Math.abs(pixels[r] - imagePixels[r]);
       let deltaG = Math.abs(pixels[g] - imagePixels[g]);
