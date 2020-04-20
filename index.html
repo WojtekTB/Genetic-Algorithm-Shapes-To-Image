@@ -25,7 +25,7 @@
   <script src="./element.js"></script>
   <script src="./graph.js"></script>
   <body>
-    <div id="col" style="float: left; padding: 5vw;">
+    <div id="col" style="float: left; padding: 10px;">
       <h2>Generation:</h2>
       <h2 style="font-weight: 10; white-space: pre-line;" id="generationNum">
         #
@@ -38,7 +38,7 @@
       <h2 style="font-weight: 10; white-space: pre-line;" id="bestFit">
         #
       </h2>
-      <h2>Current generation mutation fitness:</h2>
+      <h2>Current mutation fitness:</h2>
       <h2 style="font-weight: 10; white-space: pre-line;" id="mutationFit">
         #
       </h2>
@@ -53,7 +53,32 @@
         id="actualImage"
         style="width: 200px"
       />
-      <button onclick="begin();">begin</button>
+      <div>
+        <button onclick="stop();">stop</button>
+        <button onclick="begin();">begin</button>
+      </div>
+      <div>
+        <button onclick="draw();">next mutation</button>
+      </div>
+      <div>
+        <input type="number" disabled="true" style="width: 50px" id="numOfShapesText" value="40" min="1">
+        <label>max number of shapes</label>
+      </div>
+      <div>
+        <input type="checkbox" onclick="limitNumOfShapes(event);">
+        <label>limit number of shapes</label>
+      </div>
     </div>
   </body>
+
+  <script>
+  function limitNumOfShapes(event){
+    // console.log(event);
+    if(event.target.checked){
+      document.getElementById("numOfShapesText").disabled = false;
+    }else{
+      document.getElementById("numOfShapesText").disabled = true;
+    }
+  }
+  </script>
 </html>

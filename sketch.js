@@ -13,6 +13,26 @@ function preload() {
   imageToGuess = loadImage(imagePath);
 }
 
+function setupWithLimit(){
+  let factor = 200 / imageToGuess.width;
+  imageToGuess.resize(200, imageToGuess.height * factor);
+  imageWidth = imageToGuess.width;
+  imageHeight = imageToGuess.height;
+  imageToGuess.loadPixels();
+  imagePixels = imageToGuess.pixels;
+  canvas = createCanvas(imageWidth, imageHeight);
+  // console.log(imageWidth, imageHeight);
+  canvas.parent("myCanvas");
+  pixelDensity(1); //as it turns out you need this for some displays such as mac book pro for pixels array to work properly
+  background(0);
+  population = new Population(imageWidth, imageHeight);
+  // frameRate(1);
+  drawChart(population.fitnessHistory);
+
+  let imageElement = document.getElementById("actualImage");
+  imageElement.src = imagePath;
+}
+
 function setup() {
   //100 = w * x
   let factor = 200 / imageToGuess.width;
@@ -22,7 +42,7 @@ function setup() {
   imageToGuess.loadPixels();
   imagePixels = imageToGuess.pixels;
   canvas = createCanvas(imageWidth, imageHeight);
-  console.log(imageWidth, imageHeight);
+  // console.log(imageWidth, imageHeight);
   canvas.parent("myCanvas");
   pixelDensity(1); //as it turns out you need this for some displays such as mac book pro for pixels array to work properly
   background(0);
@@ -37,6 +57,10 @@ function setup() {
 
 function begin() {
   loop();
+}
+
+function stop(){
+  noLoop();
 }
 
 function draw() {
