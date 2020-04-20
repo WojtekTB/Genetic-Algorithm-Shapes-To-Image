@@ -14,7 +14,7 @@ function preload() {
   imageToGuess = loadImage(imagePath);
 }
 
-function setupWithLimit(){
+function setupWithLimit() {
   let factor = 200 / imageToGuess.width;
   imageToGuess.resize(200, imageToGuess.height * factor);
   imageWidth = imageToGuess.width;
@@ -118,7 +118,7 @@ function loadNewPicture() {
     let imageHeight = this.height;
     let newImageWidth;
     let newImageHeight;
-    console.log(imageWidth, imageHeight);
+    // console.log(imageWidth, imageHeight);
     if (imageWidth < imageHeight) {
       newImageWidth = `200px`;
       newImageHeight = `${(200 / imageWidth) * imageHeight}px`;
@@ -143,7 +143,7 @@ function setupCanvas(w, h) {
   pixelDensity(1); //as it turns out you need this for some displays such as mac book pro for pixels array to work properly
 
   background(0);
-  population = new Population(imageWidth, imageHeight);
+  population = new Population(w, h);
   // frameRate(1);
   drawChart(population.fitnessHistory);
   noLoop();
