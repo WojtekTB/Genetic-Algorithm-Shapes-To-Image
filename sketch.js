@@ -1,6 +1,15 @@
 var canvas;
 
 // var imagePath = "./mona-lisa-original.jpg";
+var paintingsList = [
+  "whisperings-of-love-adolphe.jpg",
+  "Toshusai_Sharaku.jpg",
+  "nighthawks.jpeg",
+  "mona-lisa-original.jpg",
+  "le-lever.jpg",
+  "girl-with-a-pearl-earing.jpg"
+]
+
 var imagePath = "./girl-with-a-pearl-earing.jpg";
 
 var imageToGuess;
@@ -11,10 +20,12 @@ var population;
 var imageWidth, imageHeight;
 var myChart;
 function preload() {
+  imagePath = "./sample-paintings/" + paintingsList[Math.floor(Math.random() * paintingsList.length)];
   imageToGuess = loadImage(imagePath);
 }
 
 function setupWithLimit() {
+  
   let factor = 200 / imageToGuess.width;
   imageToGuess.resize(200, imageToGuess.height * factor);
   imageWidth = imageToGuess.width;
@@ -35,10 +46,16 @@ function setupWithLimit() {
 }
 
 function setup() {
+
+
+
+
+
   //100 = w * x
   frameRate(99999);
   let factor = 200 / imageToGuess.width;
-  imageToGuess.resize(200, imageToGuess.height * factor);
+  imageToGuess.resize(200, Math.floor(imageToGuess.height * factor));
+  console.log(200, Math.floor(imageToGuess.height * factor));
   imageWidth = imageToGuess.width;
   imageHeight = imageToGuess.height;
   imageToGuess.loadPixels();
@@ -75,10 +92,7 @@ function draw() {
 
 function takeStep() {
   population.nextGen();
-  // console.log(population.mutated.fitness - population.best.fitness);
-  // console.log(population.mutated.data.length, population.best.data.length);
   myChart.update();
-  // console.log(population.best.data);
   let genNumLabel = document.getElementById("generationNum");
   genNumLabel.innerHTML = population.genNumber;
   let improvNumLabel = document.getElementById("improvNum");
@@ -87,9 +101,6 @@ function takeStep() {
   bestFitLabel.innerHTML = population.best.fitness;
   let mutFitLabel = document.getElementById("mutationFit");
   mutFitLabel.innerHTML = population.mutated.fitness;
-  // if (population.averageFitnessHistory.length % 1000 == 0) {
-  //   // saveCanvas("Generation_" + population.averageFitnessHistory.length);
-  // }
 }
 function loadNewPicture() {
   const selectedFile = document.getElementById('imageToEmulate').files[0];
@@ -97,21 +108,24 @@ function loadNewPicture() {
   const imageElement = document.getElementById("actualImage");
   let placeholderImage = new Image();
   let imageSrc = URL.createObjectURL(selectedFile);
-  imageToGuess = loadImage(imageSrc), () => {
+  imageToGuess = loadImage(imageSrc, () => {
     let newW;
     let newH;
     if (imageToGuess.width < imageToGuess.height) {
-      newW = 200;
-      newH = (200 / imageToGuess.width) * imageToGuess.height;
+    newH = Math.floor((200 / imageToGuess.width) * imageToGuess.height);
+    newW = 200;
     } else {
+      newW = Math.floor((200 / imageToGuess.height) * imageToGuess.width);
       newH = 200;
-      newW = (200 / imageToGuess.height) * imageToGuess.width;
     }
-
-    imageToGuess.resize(Math.floor(newW), Math.floor(newH));
+    imageToGuess.resize(newW, newH);
     imageToGuess.loadPixels();
-    imagePixels = imageToGuess.pixels;
-  };
+    imagePixels = imageToGuess.pixels
+    resizeCanvas(newW, newH);
+    population = new Population(newW, newH);
+    drawChart(population.fitnessHistory);
+
+  })
   placeholderImage.src = imageSrc;
   placeholderImage.onload = function () {
     let imageWidth = this.width;
@@ -121,31 +135,18 @@ function loadNewPicture() {
     // console.log(imageWidth, imageHeight);
     if (imageWidth < imageHeight) {
       newImageWidth = `200px`;
-      newImageHeight = `${(200 / imageWidth) * imageHeight}px`;
+      newImageHeight = `${Math.floor((200 / imageWidth) * imageHeight)}px`;
       imageHeight = (200 / imageWidth) * imageHeight;
       imageWidth = 200;
     } else {
       newImageHeight = `200px`;
-      newImageWidth = `${(200 / imageHeight) * imageWidth}px`;
+      newImageWidth = `${Math.floor((200 / imageHeight) * imageWidth)}px`;
       imageWidth = (200 / imageHeight) * imageWidth;
       imageHeight = 200;
     }
     imageElement.style.width = newImageWidth;
     imageElement.style.height = newImageHeight;
     imageElement.src = imageSrc;
-    setupCanvas(imageWidth, imageHeight);
   }
 
-}
-
-function setupCanvas(w, h) {
-  console.log(w, h);
-  resizeCanvas(Math.floor(w), Math.floor(h));
-  pixelDensity(1); //as it turns out you need this for some displays such as mac book pro for pixels array to work properly
-
-  // background(0);
-  population = new Population(Math.floor(w), Math.floor(h));
-  // frameRate(1);
-  drawChart(population.fitnessHistory);
-  noLoop();
 }

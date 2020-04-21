@@ -49,11 +49,12 @@
     <div style="max-width: 45vw;" id="myCanvas"></div>
     <img src="./mona-lisa-resized.jpg" id="actualImage" style="width: 200px" />
     <div>
-      <label for="imageToEmulate" style="display: block;">Choose a picture:</label>
+      <label for="imageToEmulate" style="display: block; font-size: 1.5vw;">Choose a picture:</label>
       <input type="file" accept="image/png, image/jpeg" name="imageToEmulate" id="imageToEmulate"
-        onchange="loadNewPicture();">
+      onchange="loadNewPicture();">
     </div>
     <div>
+      <label style="display: block; font-size: 1.5vw;">Controls:</label>
       <button onclick="stop();">stop</button>
       <button onclick="begin();">begin</button>
       <button onclick="draw();">next</button>

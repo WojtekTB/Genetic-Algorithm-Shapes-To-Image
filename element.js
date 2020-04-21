@@ -7,7 +7,7 @@ class Element {
       //if data not given, randomize data
       // let maxNumberOfShapes = 10;
       // let numberOfShapes = Math.floor(Math.random() * maxNumberOfShapes) + 3;
-      // console.log("data not given");
+      console.log("data not given");
       // for (let i = 0; i < numberOfShapes; i++) {
       this.data = this.data.concat(this.makeRandomShape());
       // }
@@ -48,8 +48,8 @@ class Element {
   }
 
   show() {
-    // background(0);
-    clear();
+    background(0);
+    // clear();
     noStroke();
     for (let i = 0; i < this.data.length; i += 9) {
       let shape = {
