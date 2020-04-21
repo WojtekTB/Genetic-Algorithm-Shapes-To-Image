@@ -143,7 +143,7 @@ function setupCanvas(w, h) {
   resizeCanvas(Math.floor(w), Math.floor(h));
   pixelDensity(1); //as it turns out you need this for some displays such as mac book pro for pixels array to work properly
 
-  background(0);
+  // background(0);
   population = new Population(Math.floor(w), Math.floor(h));
   // frameRate(1);
   drawChart(population.fitnessHistory);

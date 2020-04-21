@@ -48,7 +48,8 @@ class Element {
   }
 
   show() {
-    background(0);
+    // background(0);
+    clear();
     noStroke();
     for (let i = 0; i < this.data.length; i += 9) {
       let shape = {
