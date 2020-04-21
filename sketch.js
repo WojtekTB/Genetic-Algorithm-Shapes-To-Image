@@ -108,7 +108,7 @@ function loadNewPicture() {
       newW = (200 / imageToGuess.height) * imageToGuess.width;
     }
 
-    imageToGuess.resize(newW, newH);
+    imageToGuess.resize(Math.floor(newW), Math.floor(newH));
     imageToGuess.loadPixels();
     imagePixels = imageToGuess.pixels;
   };
@@ -139,11 +139,12 @@ function loadNewPicture() {
 }
 
 function setupCanvas(w, h) {
-  resizeCanvas(w, h);
+  console.log(w, h);
+  resizeCanvas(Math.floor(w), Math.floor(h));
   pixelDensity(1); //as it turns out you need this for some displays such as mac book pro for pixels array to work properly
 
   background(0);
-  population = new Population(w, h);
+  population = new Population(Math.floor(w), Math.floor(h));
   // frameRate(1);
   drawChart(population.fitnessHistory);
   noLoop();
