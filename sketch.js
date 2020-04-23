@@ -46,11 +46,6 @@ function setupWithLimit() {
 }
 
 function setup() {
-
-
-
-
-
   //100 = w * x
   frameRate(99999);
   let factor = 200 / imageToGuess.width;
