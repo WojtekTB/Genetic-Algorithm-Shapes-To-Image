@@ -1,5 +1,7 @@
 var canvas;
 
+var heightM = 400;
+
 // var imagePath = "./mona-lisa-original.jpg";
 var paintingsList = [
   "whisperings-of-love-adolphe.jpg",
@@ -26,8 +28,8 @@ function preload() {
 
 function setupWithLimit() {
   
-  let factor = 200 / imageToGuess.width;
-  imageToGuess.resize(200, imageToGuess.height * factor);
+  let factor = heightM / imageToGuess.width;
+  imageToGuess.resize(heightM, imageToGuess.height * factor);
   imageWidth = imageToGuess.width;
   imageHeight = imageToGuess.height;
   imageToGuess.loadPixels();
@@ -48,9 +50,9 @@ function setupWithLimit() {
 function setup() {
   //100 = w * x
   frameRate(99999);
-  let factor = 200 / imageToGuess.width;
-  imageToGuess.resize(200, Math.floor(imageToGuess.height * factor));
-  console.log(200, Math.floor(imageToGuess.height * factor));
+  let factor = heightM / imageToGuess.width;
+  imageToGuess.resize(heightM, Math.floor(imageToGuess.height * factor));
+  console.log(heightM, Math.floor(imageToGuess.height * factor));
   imageWidth = imageToGuess.width;
   imageHeight = imageToGuess.height;
   imageToGuess.loadPixels();
@@ -107,11 +109,11 @@ function loadNewPicture() {
     let newW;
     let newH;
     if (imageToGuess.width < imageToGuess.height) {
-    newH = Math.floor((200 / imageToGuess.width) * imageToGuess.height);
-    newW = 200;
+    newH = Math.floor((heightM / imageToGuess.width) * imageToGuess.height);
+    newW = heightM;
     } else {
-      newW = Math.floor((200 / imageToGuess.height) * imageToGuess.width);
-      newH = 200;
+      newW = Math.floor((heightM / imageToGuess.height) * imageToGuess.width);
+      newH = heightM;
     }
     imageToGuess.resize(newW, newH);
     imageToGuess.loadPixels();
@@ -129,15 +131,15 @@ function loadNewPicture() {
     let newImageHeight;
     // console.log(imageWidth, imageHeight);
     if (imageWidth < imageHeight) {
-      newImageWidth = `200px`;
-      newImageHeight = `${Math.floor((200 / imageWidth) * imageHeight)}px`;
-      imageHeight = (200 / imageWidth) * imageHeight;
-      imageWidth = 200;
+      newImageWidth = `${heightM}px`;
+      newImageHeight = `${Math.floor((heightM / imageWidth) * imageHeight)}px`;
+      imageHeight = (heightM / imageWidth) * imageHeight;
+      imageWidth = heightM;
     } else {
-      newImageHeight = `200px`;
-      newImageWidth = `${Math.floor((200 / imageHeight) * imageWidth)}px`;
-      imageWidth = (200 / imageHeight) * imageWidth;
-      imageHeight = 200;
+      newImageHeight = `${heightM}px`;
+      newImageWidth = `${Math.floor((heightM / imageHeight) * imageWidth)}px`;
+      imageWidth = (heightM / imageHeight) * imageWidth;
+      imageHeight = heightM;
     }
     imageElement.style.width = newImageWidth;
     imageElement.style.height = newImageHeight;
