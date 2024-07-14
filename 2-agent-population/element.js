@@ -162,26 +162,33 @@ class Element {
   }
 
   mutate() {
-    let r = Math.random();
-
-    if (r < 0.33 && this.data.length > 2 * 9) {
-      let mutationId = Math.floor(Math.random() * (this.data.length / 9));
-      this.data.splice(mutationId * 9, 9);
-      // console.log("tried removing");
-    } else if (r < 0.66) {
-      this.data = this.data.concat(this.makeRandomShape());
-    } else {
-      let mutationId = Math.floor(Math.random() * (this.data.length / 9));
-      let newshape = this.makeRandomShape();
-      this.data[mutationId] = newshape[0];
-      this.data[mutationId + 1] = newshape[1];
-      this.data[mutationId + 2] = newshape[2];
-      this.data[mutationId + 3] = newshape[3];
-      this.data[mutationId + 4] = newshape[4];
-      this.data[mutationId + 5] = newshape[5];
-      this.data[mutationId + 6] = newshape[6];
-      this.data[mutationId + 7] = newshape[7];
-      this.data[mutationId + 8] = newshape[8];
+    if (this.shouldMutateOnlyExisting) {
+      this.mutateOnlyExisting();
     }
+    else {
+      let r = Math.random();
+      if (r < 0.33 && this.data.length > 2 * 9) {
+        let mutationId = Math.floor(Math.random() * (this.data.length / 9));
+        this.data.splice(mutationId * 9, 9);
+      } else if (r < 0.66) {
+        this.data = this.data.concat(this.makeRandomShape());
+      } else {
+        this.mutateOnlyExisting();
+      }
+    }
+  }
+
+  mutateOnlyExisting() {
+    let mutationId = Math.floor(Math.random() * (this.data.length / 9));
+    let newshape = this.makeRandomShape();
+    this.data[mutationId * 9] = newshape[0];
+    this.data[mutationId * 9 + 1] = newshape[1];
+    this.data[mutationId * 9 + 2] = newshape[2];
+    this.data[mutationId * 9 + 3] = newshape[3];
+    this.data[mutationId * 9 + 4] = newshape[4];
+    this.data[mutationId * 9 + 5] = newshape[5];
+    this.data[mutationId * 9 + 6] = newshape[6];
+    this.data[mutationId * 9 + 7] = newshape[7];
+    this.data[mutationId * 9 + 8] = newshape[8];
   }
 }
