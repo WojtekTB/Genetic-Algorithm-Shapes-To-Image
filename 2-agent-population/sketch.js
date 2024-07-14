@@ -38,7 +38,7 @@ function setupWithLimit() {
   canvas.parent("myCanvas");
   pixelDensity(1); //as it turns out you need this for some displays such as mac book pro for pixels array to work properly
   background(0);
-  population = new Population(imageWidth, imageHeight);
+  population = new Population(imageWidth, imageHeight, 30, true);
   // frameRate(1);
   drawChart(population.fitnessHistory);
 
@@ -87,6 +87,7 @@ function draw() {
 }
 
 function showShapes() {
+  stop();
   population.best.outlineShapes();
 }
 

@@ -1,8 +1,8 @@
 class Population {
-  constructor(width, height, numberOfElements = 10) {
+  constructor(width, height, numberOfElements = 10, mutateOnlyExisting) {
     this.width = width;
     this.height = height;
-    this.best = new Element(this.width, this.height, undefined, 10, true);
+    this.best = new Element(this.width, this.height, undefined, numberOfElements, mutateOnlyExisting);
     this.best.calculateFitness();
     this.mutated = new Element(this.width, this.height, this.best.data);
     this.mutated.mutate();
@@ -21,6 +21,9 @@ class Population {
       this.numberOfImprovements++;
       // console.log("improved");
       this.fitnessHistory.push(this.best.fitness);
+      if (this.fitnessHistory.length > 500) {
+        this.fitnessHistory.shift();
+      }
     }
     this.mutated = new Element(this.width, this.height, this.best.data.slice());
     // this.mutated.mutate();
