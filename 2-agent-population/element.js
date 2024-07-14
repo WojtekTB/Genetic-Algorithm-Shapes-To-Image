@@ -1,16 +1,17 @@
 class Element {
-  constructor(width, height, data) {
+  constructor(width, height, data = undefined, startRandomShapes = 1, shouldMutateOnlyExisting = false) {
     this.data = [];
     this.imageWidth = width;
     this.imageHeight = height;
+    this.shouldMutateOnlyExisting = shouldMutateOnlyExisting;
     if (data === undefined) {
       //if data not given, randomize data
       // let maxNumberOfShapes = 10;
       // let numberOfShapes = Math.floor(Math.random() * maxNumberOfShapes) + 3;
       console.log("data not given");
-      // for (let i = 0; i < numberOfShapes; i++) {
-      this.data = this.data.concat(this.makeRandomShape());
-      // }
+      for (let i = 0; i < startRandomShapes; i++) {
+        this.data = this.data.concat(this.makeRandomShape());
+      }
     } else {
       this.data = data;
     }
@@ -48,6 +49,7 @@ class Element {
   }
 
   show() {
+    push();
     background(0);
     // clear();
     noStroke();
@@ -85,11 +87,11 @@ class Element {
       rotate(-shape.rotation * (3.14 / 180));
       translate(-shape.x, -shape.y);
     }
-    // image(imageToGuess, this.imageWidth, 0, this.imageWidth, this.imageHeight);
-    // image(imageToGuess, 0, 0, this.imageWidth, this.imageHeight);
+    pop();
   }
 
   outlineShapes() {
+    background(0);
     noFill();
     stroke(255, 0, 0);
     for (let i = 0; i < this.data.length; i += 9) {

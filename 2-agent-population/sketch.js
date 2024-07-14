@@ -27,7 +27,6 @@ function preload() {
 }
 
 function setupWithLimit() {
-  
   let factor = heightM / imageToGuess.width;
   imageToGuess.resize(heightM, imageToGuess.height * factor);
   imageWidth = imageToGuess.width;
@@ -87,6 +86,10 @@ function draw() {
   }
 }
 
+function showShapes() {
+  population.best.outlineShapes();
+}
+
 function takeStep() {
   population.nextGen();
   myChart.update();
@@ -109,8 +112,8 @@ function loadNewPicture() {
     let newW;
     let newH;
     if (imageToGuess.width < imageToGuess.height) {
-    newH = Math.floor((heightM / imageToGuess.width) * imageToGuess.height);
-    newW = heightM;
+      newH = Math.floor((heightM / imageToGuess.width) * imageToGuess.height);
+      newW = heightM;
     } else {
       newW = Math.floor((heightM / imageToGuess.height) * imageToGuess.width);
       newH = heightM;

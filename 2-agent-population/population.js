@@ -1,8 +1,8 @@
 class Population {
-  constructor(width, height) {
+  constructor(width, height, numberOfElements = 10) {
     this.width = width;
     this.height = height;
-    this.best = new Element(this.width, this.height);
+    this.best = new Element(this.width, this.height, undefined, 10, true);
     this.best.calculateFitness();
     this.mutated = new Element(this.width, this.height, this.best.data);
     this.mutated.mutate();
@@ -23,7 +23,8 @@ class Population {
       this.fitnessHistory.push(this.best.fitness);
     }
     this.mutated = new Element(this.width, this.height, this.best.data.slice());
-    this.mutated.mutate();
+    // this.mutated.mutate();
+    this.mutated.mutateOnlyExisting();
     this.mutated.calculateFitness();
     this.genNumber++;
   }
