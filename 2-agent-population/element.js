@@ -24,71 +24,68 @@ class Element {
 
   calculateFitness() {
     this.show();
-    //load pixels of canvas to pixels[] array
+    // Assume loadPixels() updates a Uint8ClampedArray named pixels
     loadPixels();
     let maximumError = 255 * 3 * (this.imageWidth * this.imageHeight);
     let difference = 0;
 
-    for (let i = 0; i < imagePixels.length; i += 4) {
-      let r = i;
-      let g = i + 1;
-      let b = i + 2;
+    const generatedImagePixels = pixels;
+    const realImagePixels = imagePixels;
 
-      let deltaR = Math.abs(pixels[r] - imagePixels[r]);
-      let deltaG = Math.abs(pixels[g] - imagePixels[g]);
-      let deltaB = Math.abs(pixels[b] - imagePixels[b]);
-      difference += deltaR + deltaG + deltaB;
+    // Loop unrolling example: process 8 pixels per iteration
+    for (let i = 0; i < generatedImagePixels.length; i += 32) { // 8 pixels * 4 values per pixel
+      for (let j = 0; j < 32; j += 4) {
+        const rDiff = Math.abs(generatedImagePixels[i + j] - realImagePixels[i + j]);
+        const gDiff = Math.abs(generatedImagePixels[i + j + 1] - realImagePixels[i + j + 1]);
+        const bDiff = Math.abs(generatedImagePixels[i + j + 2] - realImagePixels[i + j + 2]);
+        difference += rDiff + gDiff + bDiff;
+      }
     }
 
-    let fitness = 1 - (difference / maximumError); //normalize it between 0 and 1
-    // let polyNum = 40;
-    // if (this.data.length / 8 > polyNum) {
-    //   fitness -= 0.0001 * (this.data.length / 8 - polyNum);
-    // }
-    this.fitness = fitness; //I decided to square fitness because I want to emphesize the small imprevements
+    this.fitness = 100 - (difference / maximumError) * 100;
   }
 
   show() {
     push();
     background(0);
-    // clear();
     noStroke();
-    for (let i = 0; i < this.data.length; i += 9) {
-      let shape = {
-        shapeType: this.data[i],
-        magnitude: this.data[i + 1],
-        x: this.data[i + 2],
-        y: this.data[i + 3],
-        rotation: this.data[i + 4],
-        R: this.data[i + 5],
-        G: this.data[i + 6],
-        B: this.data[i + 7],
-        A: this.data[i + 8]
-      };
-      // console.log(shape);
 
-      fill(shape.R, shape.G, shape.B, shape.A);
-      translate(shape.x, shape.y);
-      rotate(shape.rotation * (3.14 / 180)); //convert degrees to radiants
-      if (shape.shapeType == 0) {
-        rect(0, 0, shape.magnitude, shape.magnitude);
-      } else if (shape.shapeType == 1) {
-        triangle(
-          0,
-          0,
-          -shape.magnitude,
-          shape.magnitude,
-          shape.magnitude,
-          shape.magnitude
-        );
-      } else if (shape.shapeType == 2) {
-        circle(0, 0, shape.magnitude);
+    // Precompute rotation in radians
+    const toRadians = Math.PI / 180;
+
+    for (let i = 0; i < this.data.length; i += 9) {
+      let shapeType = this.data[i];
+      let magnitude = this.data[i + 1];
+      let x = this.data[i + 2];
+      let y = this.data[i + 3];
+      let rotation = this.data[i + 4] * toRadians;
+      let R = this.data[i + 5];
+      let G = this.data[i + 6];
+      let B = this.data[i + 7];
+      let A = this.data[i + 8];
+
+      fill(R, G, B, A);
+      push(); // Save the current transformation state
+      translate(x, y);
+      rotate(rotation);
+
+      switch (shapeType) {
+        case 0: // Rectangle
+          rect(0, 0, magnitude, magnitude);
+          break;
+        case 1: // Triangle
+          triangle(0, 0, -magnitude, magnitude, magnitude, magnitude);
+          break;
+        case 2: // Circle
+          circle(0, 0, magnitude);
+          break;
       }
-      rotate(-shape.rotation * (3.14 / 180));
-      translate(-shape.x, -shape.y);
+
+      pop(); // Restore the previous transformation state
     }
     pop();
   }
+
 
   outlineShapes() {
     background(0);
@@ -164,8 +161,8 @@ class Element {
   }
 
   mutate() {
-    if (this.shouldMutateOnlyExisting) {
-      this.mutateOnlyExisting();
+    if (this.shouldMutateOnlyExisting || this.data.length > 9 * 1000) {
+      this.mutateOnlyExisting(5 * Math.random());
     }
     else {
       let r = Math.random();
@@ -180,17 +177,13 @@ class Element {
     }
   }
 
-  mutateOnlyExisting() {
-    let mutationId = Math.floor(Math.random() * (this.data.length / 9));
-    let newshape = this.makeRandomShape();
-    this.data[mutationId * 9] = newshape[0];
-    this.data[mutationId * 9 + 1] = newshape[1];
-    this.data[mutationId * 9 + 2] = newshape[2];
-    this.data[mutationId * 9 + 3] = newshape[3];
-    this.data[mutationId * 9 + 4] = newshape[4];
-    this.data[mutationId * 9 + 5] = newshape[5];
-    this.data[mutationId * 9 + 6] = newshape[6];
-    this.data[mutationId * 9 + 7] = newshape[7];
-    this.data[mutationId * 9 + 8] = newshape[8];
+  mutateOnlyExisting(numberOfShapes = 1) {
+    for (let n = 0; n < numberOfShapes; n++) {
+      let mutationId = Math.floor(Math.random() * (this.data.length / 9)) * 9; // Calculate the start index directly
+      let newShape = this.makeRandomShape();
+      for (let i = 0; i < 9; i++) {
+        this.data[mutationId + i] = newShape[i];
+      }
+    }
   }
 }

@@ -25,48 +25,60 @@
 
 <body>
   <div id="col" style="float: left; padding: 5vw;">
-    <h2>Generation:</h2>
-    <h2 style="font-weight: 10; white-space: pre-line;" id="generationNum">
-      #
-    </h2>
-    <h2>Number of improvements:</h2>
-    <h2 style="font-weight: 10; white-space: pre-line;" id="improvNum">
-      #
-    </h2>
-    <h2>Best fitness so far:</h2>
-    <h2 style="font-weight: 10; white-space: pre-line;" id="bestFit">
-      #
-    </h2>
-    <h2>Current generation mutation fitness:</h2>
-    <h2 style="font-weight: 10; white-space: pre-line;" id="mutationFit">
-      #
-    </h2>
-    <h2>Fitness chart:</h2>
-    <div class="ct-chart ct-perfect-fourth" style="width: 45vw;"></div>
+    <div style="display: inline-flex; width: 100%;">
+      <div style="border: 1px solid black; padding: 5px;">
+        <h2>Generation:</h2>
+        <h2 style="font-weight: 10; white-space: pre-line;" id="generationNum">
+          #
+        </h2>
+        <h2>Number of improvements:</h2>
+        <h2 style="font-weight: 10; white-space: pre-line;" id="improvNum">
+          #
+        </h2>
+        <h2>Best fitness so far:</h2>
+        <h2 style="font-weight: 10; white-space: pre-line;" id="bestFit">
+          #
+        </h2>
+        <h2>Current generation mutation fitness:</h2>
+        <h2 style="font-weight: 10; white-space: pre-line;" id="mutationFit">
+          #
+        </h2>
+        <h2>Current generation number of shapes:</h2>
+        <h2 style="font-weight: 10; white-space: pre-line;" id="numShapes">
+          #
+        </h2>
+      </div>
+      <div style="border: 1px solid black; padding: 5px;">
+        <div>
+          <label for="imageToEmulate" style="display: block; font-size: 1.5vw;">Choose a picture:</label>
+          <input type="file" accept="image/png, image/jpeg" name="imageToEmulate" id="imageToEmulate"
+            onchange="loadNewPicture();">
+        </div>
+        <div>
+          <label style="display: block; font-size: 1.5vw;">Controls:</label>
+          <button onclick="stop();">stop</button>
+          <button onclick="begin();">begin</button>
+          <button onclick="draw();">next</button>
+        </div>
+        <div>
+          <input type="checkbox" id="saveCheckBox" onclick="toggleSaveItter(this);">
+          <label for="saveCheckBox">Save every 5000th iteration</label>
+        </div>
+        <div>
+          <button onclick="saveManual();">Download current iteration</button>
+          <button onclick="showShapes();">Outline Shapes</button>
+        </div>
+      </div>
+    </div>
+    <div style="border: 1px solid black; padding: 5px;">
+      <h2>Fitness chart:</h2>
+      <div class="ct-chart ct-perfect-fourth" style="max-width: 45vw;"></div>
+    </div>
   </div>
 
   <div id="col" style="float: left; padding-top: 5vh;">
     <div style="max-width: 45vw;" id="myCanvas"></div>
     <img src="./mona-lisa-resized.jpg" id="actualImage" style="width: 400px" />
-    <div>
-      <label for="imageToEmulate" style="display: block; font-size: 1.5vw;">Choose a picture:</label>
-      <input type="file" accept="image/png, image/jpeg" name="imageToEmulate" id="imageToEmulate"
-        onchange="loadNewPicture();">
-    </div>
-    <div>
-      <label style="display: block; font-size: 1.5vw;">Controls:</label>
-      <button onclick="stop();">stop</button>
-      <button onclick="begin();">begin</button>
-      <button onclick="draw();">next</button>
-    </div>
-    <div>
-      <input type="checkbox" id="saveCheckBox" onclick="toggleSaveItter(this);">
-      <label for="saveCheckBox">Save every 5000th iteration</label>
-    </div>
-    <div>
-      <button onclick="saveManual();">Download current iteration</button>
-      <button onclick="showShapes();">Outline Shapes</button>
-    </div>
   </div>
 </body>
 

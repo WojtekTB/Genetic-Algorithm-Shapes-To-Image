@@ -38,7 +38,7 @@ function setupWithLimit() {
   canvas.parent("myCanvas");
   pixelDensity(1); //as it turns out you need this for some displays such as mac book pro for pixels array to work properly
   background(0);
-  population = new Population(imageWidth, imageHeight, 30, true);
+  population = new Population(imageWidth, imageHeight);
   // frameRate(1);
   drawChart(population.fitnessHistory);
 
@@ -61,7 +61,7 @@ function setup() {
   canvas.parent("myCanvas");
   pixelDensity(1); //as it turns out you need this for some displays such as mac book pro for pixels array to work properly
   background(0);
-  population = new Population(imageWidth, imageHeight);
+  population = new Population(imageWidth, imageHeight, 20, true);
   // frameRate(1);
   drawChart(population.fitnessHistory);
 
@@ -82,7 +82,9 @@ function draw() {
   takeStep();
   if (frameCount % 5000 === 0 && saveCanvasIteration) {
     population.best.show();
-    saveCanvas("Generation_" + population.genNumber, "png");
+    saveCanvas(`Generation_${population.genNumber}`, "png");
+    population.best.outlineShapes();
+    saveCanvas(`Generation_${population.genNumber}_outlined`, "png");
   }
 }
 
@@ -99,9 +101,12 @@ function takeStep() {
   let improvNumLabel = document.getElementById("improvNum");
   improvNumLabel.innerHTML = population.numberOfImprovements;
   let bestFitLabel = document.getElementById("bestFit");
-  bestFitLabel.innerHTML = population.best.fitness;
+  // 2 decimal places
+  bestFitLabel.innerHTML = `${population.best.fitness.toFixed(2)}%`;
   let mutFitLabel = document.getElementById("mutationFit");
-  mutFitLabel.innerHTML = population.mutated.fitness;
+  mutFitLabel.innerHTML = `${population.mutated.fitness.toFixed(2)}%`;
+  let numShapesLabel = document.getElementById("numShapes");
+  numShapesLabel.innerHTML = population.mutated.data.length / 9;
 }
 function loadNewPicture() {
   const selectedFile = document.getElementById('imageToEmulate').files[0];
